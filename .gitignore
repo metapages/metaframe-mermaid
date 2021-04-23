@@ -1,0 +1,10 @@
+# parcel
+.cache
+# local mkcert generated certificates for https
+.certs
+# never commit this
+.env
+# compiled website
+dist
+# dependencies
+node_modules

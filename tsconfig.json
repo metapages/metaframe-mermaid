@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "resolveJsonModule": true,
+    // https://stackoverflow.com/questions/51634361/how-to-force-tsc-to-ignore-node-modules-folder
+    // true means it won't try to compile node_modules content (even tho already "excluded")
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "baseUrl": "./src",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "outDir": "./dist",
+    "paths":{
+      "react": ["node_modules/preact/compat"],
+    },
+    "target": "es6",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types",
+      "node_modules/preact-router "
+    ]
+  },
+  "include": ["./src/**/*"],
+  "exclude": [
+    "node_modules",
+    // https://github.com/microsoft/TypeScript/issues/14538#issuecomment-654933955
+    "dist"
+  ]
+}
