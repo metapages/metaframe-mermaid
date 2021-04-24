@@ -1,0 +1,46 @@
+{
+  "name": "metaframe-template",
+  "version": "0.1.0",
+  "private": false,
+  "scripts": {
+    "prebuild": "npm i && ./node_modules/typescript/bin/tsc --build --verbose",
+    "build": "rm -rf dist/* && node_modules/parcel-bundler/bin/cli.js build public/index.html --no-autoinstall"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@metapages/metapage": "^0.5.7",
+    "preact": "^10.5.13",
+    "preact-router": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^12.20.10",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-router-dom": "^5.1.7",
+    "parcel-bundler": "^1.12.3",
+    "parcel-plugin-static-files-copy": "^2.6.0",
+    "typescript": "4.1.5"
+  },
+  "browserslist": {
+    "production": [
+      "last 3 and_chr versions",
+      "last 3 chrome versions",
+      "last 3 opera versions",
+      "last 3 ios_saf versions",
+      "last 3 safari versions"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom": "preact/compat"
+  },
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  }
+}

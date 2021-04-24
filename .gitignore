@@ -1,0 +1,12 @@
+# local mkcert generated certificates for https
+.certs
+# never commit this
+.env
+# parcel
+.cache
+# I'd like to commit this but probably not a good idea
+.vscode
+# compiled website
+dist
+# dependencies
+node_modules

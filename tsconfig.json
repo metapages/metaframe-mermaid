@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    // https://stackoverflow.com/questions/51634361/how-to-force-tsc-to-ignore-node-modules-folder
+    // true means it won't try to compile node_modules content (even tho already "excluded")
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "target": "es6",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["./src/**/*"]
+}
