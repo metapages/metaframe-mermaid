@@ -21,9 +21,9 @@ _help:
     @just --list --unsorted --list-heading $'🚪 Commands:\n\n'
 
 # Build the client static files
-build +args="": _ensure_npm_modules (_tsc "--build --verbose")
+build: _ensure_npm_modules (_tsc "--build --verbose")
     rm -rf dist/*
-    {{parcel}} build {{args}} public/index.html --no-autoinstall --detailed-report 50
+    {{parcel}} build 'public/index.html' --no-autoinstall --detailed-report 50
 
 # Run the browser dev server (optionally pointing to any remote app)
 dev: _ensure_npm_modules _mkcert (_tsc "--build --verbose")
@@ -48,14 +48,18 @@ dev: _ensure_npm_modules _mkcert (_tsc "--build --verbose")
                         public/index.html --open
     fi
 
-# compile typescript src, may or may not emit artifacts
-_tsc +args="":
-    {{tsc}} {{args}}
-
 # rebuild the client on changes, but do not serve
 watch:
     @# ts-node-dev does not work with typescript project references https://github.com/TypeStrong/ts-node/issues/897
     watchexec --restart --watch ./src --watch ./justfile --watch ./package.json --watch ./tsconfig.json -- bash -c '{{tsc}} --build --verbose && {{parcel}} watch --public-url ./ public/index.html'
+
+# deletes .cache .parcel-cache .certs dist
+clean:
+    rm -rf .cache .parcel-cache .certs dist
+
+# compile typescript src, may or may not emit artifacts
+_tsc +args="":
+    {{tsc}} {{args}}
 
 # DEV: generate TLS certs for HTTPS over localhost https://blog.filippo.io/mkcert-valid-https-certificates-for-localhost/
 _mkcert:

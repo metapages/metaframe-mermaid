@@ -6,8 +6,6 @@
 import { useContext, useEffect, useState, createContext } from "react"
 import { Metaframe, MetaframeInputMap } from "@metapages/metapage";
 
-
-
 export interface MetaframeObject {
   inputs: MetaframeInputMap;
   setOutputs?: (outputs: MetaframeInputMap) => void;

@@ -1,28 +1,8 @@
-import { h, render } from "preact";
+import { h, render, FunctionalComponent } from "preact";
 import { App } from "./App";
-import { FunctionalComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { QueryParamProvider } from "use-query-params";
 import { MetaframeObject, MetaframeContext } from "./hooks/metaframeHook";
 import { Metaframe, MetaframeInputMap } from "@metapages/metapage";
-
-const Index: FunctionalComponent = () => {
-  const [metaframeObject] = useMetaframe();
-
-  return (
-    /* I tried to pull this out into it's own file but preact hates it */
-    <MetaframeContext.Provider value={metaframeObject}>
-      <Router>
-        <QueryParamProvider ReactRouterRoute={Route}>
-          <App />
-        </QueryParamProvider>
-      </Router>
-    </MetaframeContext.Provider>
-  );
-};
-
-render(<Index />, document.getElementById("root")!);
 
 // ALL this before the render is to set up the metaframe provider
 // I tried pulling the metaframProvider out into a separate class
@@ -58,7 +38,7 @@ const useMetaframe = () => {
     if (!metaframe) {
       return;
     }
-    const onInputs = (newinputs: MetaframeInputMap) => {
+    const onInputs = (newinputs: MetaframeInputMap) :void => {
       setInputs(newinputs);
     };
     metaframe.onInputs(onInputs);
@@ -71,3 +51,16 @@ const useMetaframe = () => {
 
   return [metaframeObject];
 };
+
+const Index: FunctionalComponent = () => {
+  const [metaframeObject] = useMetaframe();
+
+  return (
+    /* I tried to pull this out into it's own file but preact hates it */
+    <MetaframeContext.Provider value={metaframeObject}>
+      <App />
+    </MetaframeContext.Provider>
+  );
+};
+
+render(<Index />, document.getElementById("root")!);
