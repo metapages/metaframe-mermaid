@@ -10,3 +10,9 @@ Fork or copy this repo.
 - `preact` for efficient, fast loading sites
 - `typescript` for type checking
 - `just` for a single method to build/test/deploy/publish
+
+## Options
+
+Other (maintained) branches contain useful extras:
+
+- chakra-ui.com UI framework: branch `OPTIONAL-ui-framework/chakra-ui.com`
