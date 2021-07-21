@@ -1,16 +1,11 @@
 # just docs: https://github.com/casey/just
 
-set shell := ["bash", "-c"]
-
+set shell                          := ["bash", "-c"]
 # E.g. 'my.app.com'. Some services e.g. auth need know the external endpoint for example OAuth
 # The root domain for this app, serving index.html
 export APP_FQDN                    := env_var_or_default("APP_FQDN", "metaframe1.dev")
 export APP_PORT                    := env_var_or_default("APP_PORT", "443")
-# browser hot-module-replacement (live reloading)
-export PORT_HMR                    := env_var_or_default("PORT_HMR", "3456")
-# see https://github.com/parcel-bundler/parcel/issues/2031
-PARCEL_WORKERS                     := env_var_or_default("PARCEL_WORKERS", `if [ -f /.dockerenv ]; then echo "1" ; fi`)
-parcel                             := "PARCEL_WORKERS=" + PARCEL_WORKERS +  " node_modules/parcel-bundler/bin/cli.js"
+vite                               := "VITE_APP_FQDN=" + APP_FQDN + "VITE_APP_PORT=" + APP_PORT + " NODE_OPTIONS='--max_old_space_size=16384' ./node_modules/vite/bin/vite.js"
 tsc                                := "./node_modules/typescript/bin/tsc"
 
 # minimal formatting, bold is very useful
@@ -21,41 +16,31 @@ _help:
     @just --list --unsorted --list-heading $'🚪 Commands:\n\n'
 
 # Build the client static files
-build: _ensure_npm_modules (_tsc "--build --verbose")
-    rm -rf dist/*
-    {{parcel}} build 'public/index.html' --no-autoinstall --detailed-report 50
+build +args="--mode=production": _ensure_npm_modules (_tsc "--build") (_build args)
+_build +args="--mode=production":
+    {{vite}} build {{args}}
 
 # Run the browser dev server (optionally pointing to any remote app)
-dev: _ensure_npm_modules _mkcert (_tsc "--build --verbose")
+dev: _ensure_npm_modules _mkcert (_tsc "--build")
     #!/usr/bin/env bash
     # Running inside docker requires modified startup configuration, HMR and HTTPS are disabled
     if [ -f /.dockerenv ]; then
-        echo "💥 Missing feature: parcel (builds browser assets) cannot be run in development mode in a docker container"
-        {{parcel}} serve \
-                        --port ${APP_PORT} \
-                        --host 0.0.0.0 \
-                        --no-hmr \
-                        public/index.html
+        # This is NOT well tested with vite.
+        # TODO: https://vitejs.dev/config/#server-hmr
+        APP_FQDN=${APP_FQDN} APP_PORT=${PORT_BROWSER} {{vite}}
     else
         APP_ORIGIN=https://${APP_FQDN}:${APP_PORT}
         echo "Browser development pointing to: ${APP_ORIGIN}"
-        {{parcel}} serve \
-                        --cert .certs/${APP_FQDN}.pem \
-                        --key  .certs/${APP_FQDN}-key.pem \
-                        --port ${APP_PORT} \
-                        --host ${APP_FQDN} \
-                        --hmr-port ${PORT_HMR} \
-                        public/index.html --open
+        VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}}
     fi
 
 # rebuild the client on changes, but do not serve
 watch:
-    @# ts-node-dev does not work with typescript project references https://github.com/TypeStrong/ts-node/issues/897
-    watchexec --restart --watch ./src --watch ./justfile --watch ./package.json --watch ./tsconfig.json -- bash -c '{{tsc}} --build --verbose && {{parcel}} watch --public-url ./ public/index.html'
+    watchexec -w src -w tsconfig.json -w package.json -w vite.config.ts -- just build
 
-# deletes .cache .parcel-cache .certs dist
+# deletes .certs dist
 clean:
-    rm -rf .cache .parcel-cache .certs dist
+    rm -rf .certs dist
 
 # compile typescript src, may or may not emit artifacts
 _tsc +args="":
@@ -89,3 +74,7 @@ _mkcert:
 
 @_ensure_npm_modules:
     if [ ! -f "{{tsc}}" ]; then npm i; fi
+
+# vite builder commands
+@_vite +args="":
+    {{vite}} {{args}}

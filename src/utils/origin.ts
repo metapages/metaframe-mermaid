@@ -1,7 +1,10 @@
+// This is not much use for a single static site, but becomes more relevant
+// when part of a server
+
 let origin = window.location.origin;
-if (process.env.NODE_ENV === "development") {
-    origin = `https://${process.env.APP_FQDN || "metaframe1.dev"}${
-    process.env.APP_PORT ? ":" + process.env.APP_PORT : ""
+if (import.meta.env.DEV) {
+    origin = `https://${import.meta.env.VITE_APP_FQDN || "metaframe1.dev"}${
+        import.meta.env.VITE_APP_PORT ? ":" + import.meta.env.VITE_APP_PORT : ""
     }`;
 }
 

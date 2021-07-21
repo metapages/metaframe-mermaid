@@ -1,6 +1,6 @@
-import { h, FunctionalComponent } from "preact";
+import { FunctionalComponent } from "preact";
 import { useContext } from "preact/hooks";
-import { MetaframeContext } from '../hooks/metaframeHook';
+import { MetaframeContext } from "@metapages/metaframe-hook";
 
 export const Home: FunctionalComponent = () => {
     const metaframe = useContext(MetaframeContext);
