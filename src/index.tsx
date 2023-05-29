@@ -1,10 +1,18 @@
-import { render } from "preact";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { WithMetaframe } from "@metapages/metaframe-hook";
-import { App } from "./App";
+import { ChakraProvider } from "@chakra-ui/react";
+import { theme } from "/@/theme";
+import { App } from "/@/App";
 
-render(
-  <WithMetaframe>
-    <App />
-  </WithMetaframe>,
-  document.getElementById("root")!
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
+  <StrictMode>
+    <ChakraProvider theme={theme}>
+      <WithMetaframe>
+        <App />
+      </WithMetaframe>
+    </ChakraProvider>
+  </StrictMode>
 );

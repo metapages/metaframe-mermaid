@@ -1,18 +1,17 @@
-# Metaframe template
+# [Metaframe](https://metapages.org/) template repository with React and Chakra UI
 
-Fast creation and deployment of advanced metaframe websites.
+  - User docs: [./public/README.md](./public/README.md)
+  - Developer docs: [./README-developer.md](./README-developer.md)
 
-Fork or copy this repo.
+Example metaframes: https://github.com/metapages?q=metaframe&type=all&language=&sort=
 
-## Features
-
-- `vite` for fast building
-- `preact` for efficient, fast loading sites
-- `typescript` for type checking
-- `just` for a single method to build/test/deploy/publish
-
-## Options
-
-Other (maintained) branches contain useful extras:
-
-- chakra-ui.com UI framework: branch `OPTIONAL-ui-framework/chakra-ui.com`
+The is a template repository (so fork and run) for creating a [metaframe](https://metapages.org/) with the following features
+  - minimal host requirements:
+    - [just](https://github.com/casey/just)
+    - [docker](https://docs.docker.com/get-started/)
+    - [deno](https://deno.land/manual/getting_started/installation)
+    - [mkcert](https://github.com/FiloSottile/mkcert#installation)
+  - automatic https certificate generation
+  - single command development (`just dev`)
+  - single command publishing to [npm](https://www.npmjs.com/)
+  - single command publishing to [github pages](https://pages.github.com/)

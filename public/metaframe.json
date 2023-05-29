@@ -1,16 +1,16 @@
 {
-	"version": "0.3",
+	"version": "0.6",
 	"metadata": {
-		"title": "metaframe-template"
+		"name": "Mermaid.js flowchart generator",
+		"author": "dion",
+		"description": "Display mermaid.js graphs and diagrams. Plugin: display the metapage definition using mermaid.js"
 	},
 	"inputs": {
-		"*": {
-			"type": "application/octet-stream:base64"
-		}
+		"metapage/definition": {},
+		"mermaid": {}
 	},
-    "outputs": {
-		"*": {
-			"type": "application/octet-stream:base64"
-		}
-	}
+	"outputs": {
+		"click": {}
+	},
+	"allow": "fullscreen *;"
 }
