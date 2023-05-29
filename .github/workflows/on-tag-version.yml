@@ -1,0 +1,63 @@
+# .yaml files in this directory are executed workflows:
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
+# This workflow is triggered on pushes to non-main (or master) branches
+# Builds and tests the app (just test)
+name: on-tag-version
+
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.25.4
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  on-tag-version:
+    name: Publish on new version tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: '0'
+
+      # This enables build caching
+      - name: buildx
+        uses: docker/setup-buildx-action@v1
+        id: buildx
+        with:
+          install: true
+          driver: docker
+
+      - name: Login to GitHub Container Registry
+        # We could login directly, but the docker/login-action@v1 action includes a cleanup operation that deletes the auth credential
+        uses: docker/login-action@v1
+        env:
+          DOCKER_REGISTRY: ghcr.io
+          # https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          # the docs say to use the above, but the local tester 'act' hates it but this works on both
+          # username: ${{ github.actor }}
+          # https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          password: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Prepare cloud/CI image
+        uses: ./.github/actions/cloud-image
+
+      - name: on-tag-version
+        uses: ./.github/actions/cloud
+        env:
+          DOCKER_REGISTRY: ghcr.io
+          # https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+          command: "just on-tag-version"
