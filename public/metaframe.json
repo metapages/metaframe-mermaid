@@ -1,7 +1,7 @@
 {
 	"version": "0.6",
 	"metadata": {
-		"name": "Mermaid.js flowchart generator",
+		"name": "Diagram",
 		"author": "dion",
 		"description": "Display mermaid.js graphs and diagrams. Plugin: display the metapage definition using mermaid.js"
 	},
