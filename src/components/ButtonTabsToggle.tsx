@@ -8,7 +8,7 @@ import {
 } from '@metapages/hash-query';
 
 export const ButtonTabsToggle: React.FC = () => {
-  const [mode] = useHashParam("menu", undefined);
+  const [mode] = useHashParam("button", undefined);
   const [hideMenu, sethideMenu] = useHashParamBoolean("menuhidden");
 
   const toggleMenu = useCallback(() => {
