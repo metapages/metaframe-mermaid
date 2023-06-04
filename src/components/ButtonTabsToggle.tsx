@@ -3,21 +3,13 @@ import { useCallback } from 'react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { IconButton } from '@chakra-ui/react';
 import {
+  useHashParam,
   useHashParamBoolean,
-  useHashParamJson,
 } from '@metapages/hash-query';
 
-import {
-  defaultOptions,
-  Options,
-} from './PanelOptions';
-
 export const ButtonTabsToggle: React.FC = () => {
+  const [mode] = useHashParam("menu", undefined);
   const [hideMenu, sethideMenu] = useHashParamBoolean("hidemenu");
-  const [options] = useHashParamJson<Options>(
-    "options",
-    defaultOptions
-  );
 
   const toggleMenu = useCallback(() => {
     sethideMenu(!hideMenu);
@@ -29,7 +21,8 @@ export const ButtonTabsToggle: React.FC = () => {
       variant="ghost"
       color="gray.400"
       onClick={toggleMenu}
-      opacity={options.invisibleMenuWhenHidden && hideMenu ? 0 : 1}
+      opacity={(mode === "invisible" || mode === "hidden") && hideMenu ? 0 : 1}
+      disabled={mode === "hidden" && hideMenu}
       icon={<HamburgerIcon />}
     />
   );

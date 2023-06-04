@@ -8,3 +8,5 @@
 dist
 # dependencies
 node_modules
+# made by justfile docker machinery
+.tmp

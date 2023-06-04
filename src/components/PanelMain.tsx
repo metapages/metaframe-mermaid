@@ -127,7 +127,6 @@ const createMermaidFlowchartFromMetapage = (
   metapageDefinition: MetapageDefinitionV3
 ): { mermaid?: string; error?: string[] } => {
   if (!metapageDefinition) {
-    // console.log(`Cannot graph: ${metapageDefinition} is null`);
     return {
       error: [`Metapage definition: cannot graph: metapageDefinition is null`],
     };
@@ -139,7 +138,6 @@ const createMermaidFlowchartFromMetapage = (
       metapageDefinition = JSON.parse(metapageDefinition);
     } catch (err) {
       // guess not
-      // console.log(`Cannot graph failed to JSON.parse ${metapageDefinition}\n:"${err}"`);
       return {
         error: [
           `Metapage definition: failed to JSON.parse metapageDefinition: ${metapageDefinition}`,
@@ -150,7 +148,6 @@ const createMermaidFlowchartFromMetapage = (
   }
 
   if (!metapageDefinition.metaframes) {
-    // console.log(`Cannot graph, no metaframes: ${JSON.stringify(metapageDefinition, null, "  ")}`);
     return {
       error: [
         `Metapage definition: Cannot graph, no metaframes: ${metapageDefinition}`,

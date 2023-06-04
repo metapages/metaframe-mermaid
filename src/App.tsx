@@ -1,6 +1,15 @@
-import "/@/app.css";
+import '/@/app.css';
 
-import { EditIcon, InfoIcon, ViewIcon } from "@chakra-ui/icons";
+import { ButtonTabsToggle } from '/@/components/ButtonTabsToggle';
+import { PanelHelp } from '/@/components/PanelHelp';
+import { PanelMain } from '/@/components/PanelMain';
+import { PanelOptions } from '/@/components/PanelOptions';
+
+import {
+  EditIcon,
+  InfoIcon,
+  ViewIcon,
+} from '@chakra-ui/icons';
 import {
   HStack,
   Show,
@@ -10,36 +19,41 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from "@chakra-ui/react";
-import { useHashParamBoolean } from "@metapages/hash-query";
-
-import { PanelHelp } from "/@/components/PanelHelp";
-import { PanelMain } from "/@/components/PanelMain";
-import { PanelOptions } from "/@/components/PanelOptions";
-import { ButtonTabsToggle } from "/@/components/ButtonTabsToggle";
+} from '@chakra-ui/react';
+import {
+  useHashParam,
+  useHashParamBoolean,
+  useHashParamInt,
+} from '@metapages/hash-query';
 
 export const App: React.FC = () => {
   const [hideMenu] = useHashParamBoolean("hidemenu");
+  const [mode] = useHashParam("menu", undefined);
+  const [tab, setTab] = useHashParamInt("tab", 0);
 
   if (hideMenu) {
-    return (
-      <>
-        <HStack
-          style={{ position: "absolute" }}
-          width="100%"
-          justifyContent="flex-end"
-        >
-          <Spacer />
-          <Show breakpoint="(min-width: 200px)">
-            <ButtonTabsToggle />
-          </Show>
-        </HStack>
-        <PanelMain />
-      </>
-    );
+    if (mode === undefined || mode === "visible" || mode === "invisible") {
+      return (
+        <>
+          <HStack
+            style={{ position: "absolute" }}
+            width="100%"
+            justifyContent="flex-end"
+          >
+            <Spacer />
+            <Show breakpoint="(min-width: 200px)">
+              <ButtonTabsToggle />
+            </Show>
+          </HStack>
+          <PanelMain />
+        </>
+      );
+    } else if (mode === "hidden") {
+      return <PanelMain />;
+    }
   }
   return (
-    <Tabs>
+    <Tabs index={tab || 0} isLazy={true} onChange={setTab}>
       <TabList>
         <Tab>
           <ViewIcon /> &nbsp; Main panel

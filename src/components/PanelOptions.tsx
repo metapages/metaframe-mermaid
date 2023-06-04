@@ -1,28 +1,31 @@
 import { useCallback } from 'react';
 
-import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Switch,
-} from '@chakra-ui/react';
 import { useHashParamJson } from '@metapages/hash-query';
 
+import { RadioButtonMode } from './RadioButtonMode';
+
+// Leaving these all commented out instead of removed so new options
+// can be added quickly
+
+
+
 export type Options = {
-  invisibleMenuWhenHidden?: boolean;
+  // invisibleMenuWhenHidden?: boolean;
+  // mode? : string;
   // someStringOption?: string;
 };
 
 export const defaultOptions: Options = {
-  invisibleMenuWhenHidden: false,
+  // invisibleMenuWhenHidden: false,
+  // mode: "edit",
   // someStringOption: "foo",
 };
 
 const validationSchema = yup.object({
-  invisibleMenuWhenHidden: yup.boolean().optional(),
+  // invisibleMenuWhenHidden: yup.boolean().optional(),
+  // mode: yup.string().optional(),
   // someStringOption: yup.string().optional(),
 });
 interface FormType extends yup.InferType<typeof validationSchema> {}
@@ -40,39 +43,24 @@ export const PanelOptions: React.FC = () => {
     [setOptions]
   );
 
-  const formik = useFormik({
-    initialValues: {
-      invisibleMenuWhenHidden: options.invisibleMenuWhenHidden,
-      // someStringOption: options.someStringOption,
-    },
-    onSubmit,
-
-    validationSchema,
-  });
-
-  // const handleDistributionChange = useCallback(
-  //   (e: React.ChangeEvent<any>) => {
-  //     formik.setFieldValue("distribution", e.target.value);
-  //     formik.submitForm();
+  // const formik = useFormik({
+  //   initialValues: {
+  //     invisibleMenuWhenHidden: options.invisibleMenuWhenHidden,
   //   },
-  //   [formik]
-  // );
+  //   onSubmit,
 
-  const handleSwitch = useCallback(
-    (e: React.ChangeEvent<any>) => {
-      formik.setFieldValue("invisibleMenuWhenHidden", e.target.checked);
-      formik.submitForm();
-    },
-    [formik]
-  );
+  //   validationSchema,
+  // });
+
+
 
   return (
     <>
       <br />
-      <form onSubmit={formik.handleSubmit}>
+      {/* <form onSubmit={formik.handleSubmit}>
         <FormControl>
           <FormLabel htmlFor="invisibleMenuWhenHidden">
-            When menu is hidden, make hamburger button invisible
+            When menu is hidden, hide hamburger button
           </FormLabel>
           <Switch
             id="invisibleMenuWhenHidden"
@@ -81,26 +69,12 @@ export const PanelOptions: React.FC = () => {
           />
         </FormControl>
 
-        {/* <FormControl>
-          <FormLabel htmlFor="someStringOption">
-            Some string option (saved in hash params)
-          </FormLabel>
-
-          <InputGroup>
-            <Input
-              id="someStringOption"
-              name="someStringOption"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.someStringOption}
-            />
-          </InputGroup>
-        </FormControl> */}
-
         <Button type="submit" display="none">
           submit
         </Button>
-      </form>
+      </form> */}
+
+      <RadioButtonMode />
     </>
   );
 };
