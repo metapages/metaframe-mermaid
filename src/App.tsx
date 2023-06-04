@@ -27,9 +27,9 @@ import {
 } from '@metapages/hash-query';
 
 export const App: React.FC = () => {
-  const [hideMenu] = useHashParamBoolean("hidemenu");
-  const [mode] = useHashParam("menu", undefined);
-  const [tab, setTab] = useHashParamInt("tab", 0);
+  const [hideMenu] = useHashParamBoolean("menuhidden");
+  const [mode] = useHashParam("button", undefined);
+  const [tab, setTab] = useHashParamInt("tab");
 
   if (hideMenu) {
     if (mode === undefined || mode === "visible" || mode === "invisible") {

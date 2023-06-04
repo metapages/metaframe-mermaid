@@ -9,7 +9,7 @@ import {
 
 export const ButtonTabsToggle: React.FC = () => {
   const [mode] = useHashParam("menu", undefined);
-  const [hideMenu, sethideMenu] = useHashParamBoolean("hidemenu");
+  const [hideMenu, sethideMenu] = useHashParamBoolean("menuhidden");
 
   const toggleMenu = useCallback(() => {
     sethideMenu(!hideMenu);

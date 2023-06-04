@@ -13,7 +13,7 @@ import { useHashParam } from '@metapages/hash-query';
 export type Modes = "visible" | "invisible" | "hidden";
 
 export const RadioButtonMode: React.FC = () => {
-  const [mode, setMode] = useHashParam("menu", undefined);
+  const [mode, setMode] = useHashParam("button", undefined);
 
   const handleRadio = useCallback(
     (nextValue: string) => {

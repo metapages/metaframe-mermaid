@@ -123,6 +123,10 @@ export const PanelMain: React.FC = () => {
   );
 };
 
+const safe = (s: string) => {
+  return s.replace(/-/g, "_");
+};
+
 const createMermaidFlowchartFromMetapage = (
   metapageDefinition: MetapageDefinitionV3
 ): { mermaid?: string; error?: string[] } => {
@@ -158,12 +162,10 @@ const createMermaidFlowchartFromMetapage = (
   let graphDefinition = "flowchart LR";
   const metaframeKeys = Object.keys(metapageDefinition.metaframes);
   const metaframeKeysToMermaidId = Object.fromEntries(
-    Object.entries(metapageDefinition.metaframes).map(([k, v], i) => [k, i + 1])
+    Object.entries(metapageDefinition.metaframes).map(([k, v], i) => [k, `m${i + 1}`])
   );
 
-  const safe = (s: string) => {
-    return s.replace(/-/g, "_");
-  };
+
   metaframeKeys.forEach(function (metaframeId, index) {
     graphDefinition += `\n\t${metaframeKeysToMermaidId[metaframeId]}["${metaframeId}"]`;
     graphDefinition += `\n\tclick ${metaframeKeysToMermaidId[metaframeId]} handleClick`;
@@ -175,6 +177,10 @@ const createMermaidFlowchartFromMetapage = (
     ) {
       metapageDefinition.metaframes[metaframeId].inputs!.forEach(
         (pipe: MetaframeInputMap) => {
+          if (!metaframeKeysToMermaidId[pipe.metaframe]) {
+            return;
+          }
+
           if (pipe.target) {
             graphDefinition += `\n\t${
               metaframeKeysToMermaidId[pipe.metaframe]

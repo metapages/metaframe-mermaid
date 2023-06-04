@@ -1,8 +1,4 @@
-import { useCallback } from 'react';
-
 import * as yup from 'yup';
-
-import { useHashParamJson } from '@metapages/hash-query';
 
 import { RadioButtonMode } from './RadioButtonMode';
 
@@ -31,17 +27,18 @@ const validationSchema = yup.object({
 interface FormType extends yup.InferType<typeof validationSchema> {}
 
 export const PanelOptions: React.FC = () => {
-  const [options, setOptions] = useHashParamJson<Options>(
-    "options",
-    defaultOptions
-  );
+  // const [options, setOptions] = useHashParamJson<Options>(
+  //   "options",
+  //   defaultOptions
+  // );
 
-  const onSubmit = useCallback(
-    (values: FormType) => {
-      setOptions(values);
-    },
-    [setOptions]
-  );
+
+  // const onSubmit = useCallback(
+  //   (values: FormType) => {
+  //     setOptions(values);
+  //   },
+  //   [setOptions]
+  // );
 
   // const formik = useFormik({
   //   initialValues: {
