@@ -31,7 +31,7 @@ export const RadioButtonMode: React.FC = () => {
           remain visible
         </Radio>
         <Radio value="invisible">be invisible but clickable</Radio>
-        <Radio value="hidden">removed (you cannot click back without removing <Code>menu=hidden</Code> in the URL </Radio>
+        <Radio value="hidden">removed (you cannot click back without removing <Code>button=hidden</Code> in the URL </Radio>
       </Stack>
     </RadioGroup>
     </>
