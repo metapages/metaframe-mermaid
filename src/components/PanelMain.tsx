@@ -49,20 +49,27 @@ export const PanelMain: React.FC = () => {
     }
     let cancelled = false;
     (async () => {
-      if (cancelled) {
+      if (cancelled || !ref.current || !document.body.contains(ref.current)) {
         return;
       }
 
-      const { svg, bindFunctions } = await mermaid.render(
-        "customMermaid",
-        mermaidDefinition
-      );
-      if (cancelled || !ref.current || !svg) {
-        return;
-      }
-      ref.current.innerHTML = svg;
-      if (bindFunctions) {
-        bindFunctions(ref.current);
+      try {
+        let { svg, bindFunctions } = await mermaid.render(
+          `randomId${Math.floor(Math.random() * 10000000)}`,
+          mermaidDefinition
+        );
+
+        if (cancelled || !svg) {
+          return;
+        }
+
+        ref.current.innerHTML = svg;
+        if (bindFunctions) {
+          bindFunctions(ref.current);
+        }
+      } catch (err: any) {
+        console.log("err", err);
+        setError([err?.message]);
       }
     })();
 
@@ -76,21 +83,23 @@ export const PanelMain: React.FC = () => {
     if (!metaframeObject?.metaframe) {
       return;
     }
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "loose",
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: false,
+      },
+    });
+
     const metaframe = metaframeObject.metaframe;
     const onInputs = (inputs: MetaframeInputMap): void => {
-      mermaid.initialize({
-        startOnLoad: false,
-        securityLevel: "loose",
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: false,
-        },
-      });
-
       if (inputs["metapage/definition"]) {
         const { mermaid, error } = createMermaidFlowchartFromMetapage(
           inputs["metapage/definition"]
         );
+
         setMermaidDefinition(mermaid || "");
         setError(error);
       } else if (inputs["mermaid"]) {
@@ -104,20 +113,21 @@ export const PanelMain: React.FC = () => {
       // If the metaframe is cleaned up, also remove the inputs listener
       metaframe.removeListener(MetaframeEvents.Inputs, onInputs);
     };
-  }, [metaframeObject.metaframe, setMermaidDefinition]);
+  }, [metaframeObject.metaframe]);
 
   return (
     <Box>
-      {error ? (
+      {error && error.length > 0 ? (
         <Stack spacing={3}>
-          {error.map((e) => (
-            <Alert status="error">
+          {error.map((e, i) => (
+            <Alert status="error" key={i}>
               <AlertIcon />
               {e}
             </Alert>
           ))}
         </Stack>
       ) : null}
+
       <div ref={ref} className="customMermaid"></div>
     </Box>
   );
@@ -162,9 +172,11 @@ const createMermaidFlowchartFromMetapage = (
   let graphDefinition = "flowchart LR";
   const metaframeKeys = Object.keys(metapageDefinition.metaframes);
   const metaframeKeysToMermaidId = Object.fromEntries(
-    Object.entries(metapageDefinition.metaframes).map(([k, v], i) => [k, `m${i + 1}`])
+    Object.entries(metapageDefinition.metaframes).map(([k, v], i) => [
+      k,
+      `m${i + 1}`,
+    ])
   );
-
 
   metaframeKeys.forEach(function (metaframeId, index) {
     graphDefinition += `\n\t${metaframeKeysToMermaidId[metaframeId]}["${metaframeId}"]`;

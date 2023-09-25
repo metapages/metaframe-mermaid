@@ -1,17 +1,21 @@
 import '/@/app.css';
 
+import { useState } from 'react';
+
 import { ButtonTabsToggle } from '/@/components/ButtonTabsToggle';
+import { PanelOptions } from '/@/components/options/PanelOptions';
 import { PanelHelp } from '/@/components/PanelHelp';
 import { PanelMain } from '/@/components/PanelMain';
-import { PanelOptions } from '/@/components/PanelOptions';
 
 import {
+  CopyIcon,
   EditIcon,
   InfoIcon,
   ViewIcon,
 } from '@chakra-ui/icons';
 import {
   HStack,
+  IconButton,
   Show,
   Spacer,
   Tab,
@@ -19,19 +23,23 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Tooltip,
+  useToast,
 } from '@chakra-ui/react';
 import {
+  isIframe,
   useHashParam,
-  useHashParamBoolean,
-  useHashParamInt,
 } from '@metapages/hash-query';
 
-export const App: React.FC = () => {
-  const [hideMenu] = useHashParamBoolean("menuhidden");
-  const [mode] = useHashParam("button", undefined);
-  const [tab, setTab] = useHashParamInt("tab");
+const isFramed = isIframe();
 
-  if (hideMenu) {
+export const App: React.FC = () => {
+  const [menuhidden, setMenuHidden] = useState<boolean>(isFramed);
+  const [mode] = useHashParam("hm", undefined);
+  const [tab, setTab] = useState<number>(0);
+  const toast = useToast();
+
+  if (menuhidden) {
     if (mode === undefined || mode === "visible" || mode === "invisible") {
       return (
         <>
@@ -42,13 +50,17 @@ export const App: React.FC = () => {
           >
             <Spacer />
             <Show breakpoint="(min-width: 200px)">
-              <ButtonTabsToggle />
+              <ButtonTabsToggle
+                menuhidden={menuhidden}
+                setMenuHidden={setMenuHidden}
+                mode={mode}
+              />
             </Show>
           </HStack>
           <PanelMain />
         </>
       );
-    } else if (mode === "hidden") {
+    } else if (mode === "disabled") {
       return <PanelMain />;
     }
   }
@@ -65,7 +77,28 @@ export const App: React.FC = () => {
           <InfoIcon />
           &nbsp; Help
         </Tab>
-        <Spacer /> <ButtonTabsToggle />
+        <Tooltip label="Copy URL to clipboard">
+          <IconButton
+            aria-label="copy url"
+            variant="ghost"
+            icon={<CopyIcon />}
+            onClick={() => {
+              window.navigator.clipboard.writeText(window.location.href);
+              toast({
+                title: "Copied URL to clipboard",
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+              });
+            }}
+          />
+        </Tooltip>
+        <Spacer />{" "}
+        <ButtonTabsToggle
+          menuhidden={menuhidden}
+          setMenuHidden={setMenuHidden}
+          mode={mode}
+        />
       </TabList>
 
       <TabPanels>
