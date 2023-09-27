@@ -1,0 +1,16 @@
+{
+	"version": "0.6",
+	"metadata": {
+		"name": "Diagram",
+		"author": "dion",
+		"description": "Display mermaid.js graphs and diagrams. Plugin: display the metapage definition using mermaid.js"
+	},
+	"inputs": {
+		"metapage/definition": {},
+		"mermaid": {}
+	},
+	"outputs": {
+		"click": {}
+	},
+	"allow": "fullscreen *;"
+}
