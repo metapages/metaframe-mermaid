@@ -4,6 +4,7 @@
 		"name": "Diagram",
 		"author": "dion",
 		"description": "Display mermaid.js graphs and diagrams. Plugin: display the metapage definition using mermaid.js"
+		
 	},
 	"inputs": {
 		"metapage/definition": {},

@@ -193,6 +193,9 @@
 
     <!-- Misc generic and specific functions -->
     <script>
+
+      const isEditMode = !!(new URL(window.location.href).searchParams.get("edit"));
+
       window.logStdout = (s) => {
         const root = document.getElementById("root");
         const pre = document.createElement("pre");
@@ -504,6 +507,12 @@
         const [_, hashParams] = getUrlHashParamsFromHashString(
           window.location.hash
         );
+        
+
+        if (isEditMode) {
+          // do NOT change the visibility of the edit buttons
+          return;
+        }
 
         if (hashParams["hm"] === "disabled") {
           document.getElementById("menu-button").style.display = "none";
@@ -753,13 +762,13 @@
         .getElementById("menu-button")
         .addEventListener("click", onMenuClick);
 
-      // If there is no code, show the editor
-      // if (!getCodeFromUrl()) {
-      //   window.addEventListener("load", () => {
-      //     // onMenuClick();
-      //   });
-      // } else {
       refreshUpdateSvgButton();
+      if (isEditMode) {
+        // if editing, force showing the menu
+        window.addEventListener("load", () => {
+          onMenuClick();
+        });
+      }
       // }
     </script>
 
