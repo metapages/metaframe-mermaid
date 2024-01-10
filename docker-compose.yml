@@ -1,0 +1,93 @@
+version: "2.4"
+
+services:
+
+  server:
+    build:
+      context: ./server
+    # image: denoland/deno:alpine-1.38.3
+    command: deno run -A --watch ./server.ts
+    working_dir: /app/server
+    # health check with curl, would rather just use deno but work
+    healthcheck:
+      test: curl --fail http://localhost:3000 || exit 1
+      interval: 5s
+      timeout: 1s
+    environment:
+      - "DENO_DIR=/deno"
+      - "DENO_INSTALL_ROOT=/deno"
+      - "PORT=3000"
+      - "APP_FQDN=${APP_FQDN:-server1.localhost}"
+      - "PATH=$PATH:/DENO_INSTALL_ROOT/bin"
+    expose:
+      - 3000
+    volumes:
+      - deno:/deno
+      - ./server:/app/server
+      - ./client/src:/app/client/src
+    logging:
+      driver: ${LOGGING_SERVER:-local}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-server.tls=true
+      - traefik.http.routers.app-server.rule=Host("${APP_FQDN:-server1.localhost}")
+
+  client:
+    build:
+      context: ./client
+    command: just dev
+    working_dir: /app/client
+    healthcheck:
+      test: curl --fail http://localhost:4440 || exit 1
+      interval: 5s
+      timeout: 1s
+    environment:
+      - "APP_PORT_BROWSER=4440"
+      - "APP_PORT=${APP_PORT:-443}"
+      - "APP_FQDN=${APP_FQDN:-server1.localhost}"
+      - BASE=editor
+    expose:
+      - 4440
+    volumes:
+      - node_modules:/app/client/node_modules
+      - ./client/dist:/app/client/dist
+      - ./client/public:/app/client/public
+      - ./client/src:/app/client/src
+      - ./client/index.html:/app/client/index.html
+      - ./client/justfile:/app/client/justfile
+      - ./client/package.json:/app/client/package.json
+      - ./client/package-lock.json:/app/client/package-lock.json
+      - ./client/tsconfig.json:/app/client/tsconfig.json
+      - ./client/vite.config.ts:/app/client/vite.config.ts
+      - ./.git:/app/.git
+    logging:
+      driver: ${LOGGING_SERVER:-local}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app-client.tls=true
+      - traefik.http.routers.app-client.rule=Host("${APP_FQDN:-server1.localhost}") && PathPrefix(`/editor`)
+
+  traefik:
+    image: "traefik:v2.10.7"
+    container_name: "traefik-connect-metaframe-mermaid"
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.traefik=true"
+    ports:
+      # HTTPS / SSL port
+      - "${APP_PORT:-443}:443"
+      # The Traefik Web UI port (enabled by api:insecure: true in traefik.yml)
+      - "${TRAEFIK_WEB_UI_PORT:-8080}:8080"
+    volumes:
+     - ./.traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+     - ./.traefik/config.yml:/etc/traefik/config.yml:ro
+     - ./.traefik/certs:/etc/certs:ro
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  deno:
+    driver: local
+  node_modules:
+    driver: local
+
+
