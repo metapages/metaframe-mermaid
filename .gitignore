@@ -1,12 +1,12 @@
+# macos junk
+.DS_Store
 # local mkcert generated certificates for https
-.certs
+/.certs
 # never commit this
-.env
-# I'd like to commit this but probably not a good idea
-.vscode
-# compiled website
-dist
-# dependencies
-node_modules
-# made by justfile docker machinery
-.tmp
+/.env
+# ignored on the main branch, force-added on the gh-pages branch
+docs
+
+.traefik/certs
+
+/deploy
