@@ -38,7 +38,12 @@ const DEFAULT_METAFRAME_DEFINITION: MetaframeDefinitionV6 = {
     },
   },
   inputs: {},
-  outputs: {},
+  outputs: {
+    click: {
+      type: "text",
+      description: "Value is the node id clicked on",
+    },
+  },
 };
 
 const DEFAULT_METAFRAME_DEFINITION_STRING = JSON.stringify(DEFAULT_METAFRAME_DEFINITION, null, 2);

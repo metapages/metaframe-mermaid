@@ -22,6 +22,7 @@ grey                               := "\\e[90m"
 @dev +args="": _mkcert open
   docker-compose up {{args}}
 
+# Shut down the local server
 @down +args="":
   docker-compose down {{args}}
 
